@@ -1,4 +1,5 @@
 import { fallbackProducts, sortProducts, type Product } from "../../../lib/content";
+import { getStoredProducts, productStoreConfigured } from "../../../lib/product-store";
 
 export const dynamic = "force-dynamic";
 
@@ -59,6 +60,17 @@ function fromCsv(csv: string): Product[] {
 }
 
 export async function GET() {
+  if (productStoreConfigured()) {
+    try {
+      const content = await getStoredProducts();
+      return Response.json(content, {
+        headers: { "Cache-Control": "public, max-age=30, stale-while-revalidate=120" },
+      });
+    } catch {
+      // The public storefront remains available with its bundled products if Google is temporarily unavailable.
+    }
+  }
+
   const sheetUrl = process.env.GOOGLE_SHEETS_CSV_URL;
   if (!sheetUrl) {
     return Response.json({ source: "fallback", products: sortProducts(fallbackProducts) });
