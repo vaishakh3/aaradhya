@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { fallbackProducts, sortProducts, type Product } from "../lib/content";
 
 const WHATSAPP_NUMBER = "918590160018";
@@ -18,14 +18,29 @@ export default function AaradhyaSite() {
   const [category, setCategory] = useState("All");
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
   const dialogRef = useRef<HTMLDivElement>(null);
+  const lastFocusedRef = useRef<HTMLElement | null>(null);
+
+  const openProduct = useCallback((product: Product) => {
+    lastFocusedRef.current = document.activeElement instanceof HTMLElement ? document.activeElement : null;
+    setSelectedProduct(product);
+  }, []);
+
+  const closeProduct = useCallback(() => {
+    setSelectedProduct(null);
+    window.requestAnimationFrame(() => lastFocusedRef.current?.focus());
+  }, []);
 
   useEffect(() => {
-    fetch("/api/content")
+    const controller = new AbortController();
+
+    fetch("/api/content", { signal: controller.signal })
       .then((response) => (response.ok ? response.json() : null))
       .then((data) => {
         if (Array.isArray(data?.products) && data.products.length) setProducts(sortProducts(data.products));
       })
       .catch(() => undefined);
+
+    return () => controller.abort();
   }, []);
 
   useEffect(() => {
@@ -35,13 +50,41 @@ export default function AaradhyaSite() {
 
   useEffect(() => {
     if (!selectedProduct) return;
+    const dialog = dialogRef.current;
+    if (!dialog) return;
+
+    const focusable = Array.from(
+      dialog.querySelectorAll<HTMLElement>('a[href], button:not([disabled]), [tabindex]:not([tabindex="-1"])'),
+    );
+    const first = focusable[0];
+    const last = focusable.at(-1);
     const onKey = (event: KeyboardEvent) => {
-      if (event.key === "Escape") setSelectedProduct(null);
+      if (event.key === "Escape") closeProduct();
+      if (event.key !== "Tab" || !first || !last) return;
+      if (event.shiftKey && document.activeElement === first) {
+        event.preventDefault();
+        last.focus();
+      } else if (!event.shiftKey && document.activeElement === last) {
+        event.preventDefault();
+        first.focus();
+      }
     };
     window.addEventListener("keydown", onKey);
-    dialogRef.current?.focus();
+    const focusFrame = window.requestAnimationFrame(() => first?.focus());
+    return () => {
+      window.cancelAnimationFrame(focusFrame);
+      window.removeEventListener("keydown", onKey);
+    };
+  }, [closeProduct, selectedProduct]);
+
+  useEffect(() => {
+    if (!menuOpen) return;
+    const onKey = (event: KeyboardEvent) => {
+      if (event.key === "Escape") setMenuOpen(false);
+    };
+    window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-  }, [selectedProduct]);
+  }, [menuOpen]);
 
   const categories = useMemo(
     () => ["All", ...Array.from(new Set(products.map((product) => product.category)))],
@@ -54,14 +97,18 @@ export default function AaradhyaSite() {
   return (
     <main>
       <div aria-hidden={selectedProduct ? true : undefined}>
-        <div className="announcement">Aaradhya — Where elegance becomes an identity</div>
+        <div className="announcement">
+          <span>Complimentary personal styling via WhatsApp</span>
+          <strong>Aaradhya — Where elegance becomes an identity</strong>
+          <span>India · Est. 2026</span>
+        </div>
 
       <header className="site-header">
         <a className="brand-link" href="#top" aria-label="Aaradhya home" onClick={closeMenu}>
           <img src="/brand/aaradhya-logo.svg" alt="Aaradhya women's clothing brand" />
         </a>
         <nav className="desktop-nav" aria-label="Primary navigation">
-          <a href="#collection">Collection</a>
+          <a href="#collection">The collection</a>
           <a href="#story">Our story</a>
           <a href="#world">World of Aaradhya</a>
         </nav>
@@ -95,33 +142,49 @@ export default function AaradhyaSite() {
 
       <div className="page-content" aria-hidden={menuOpen ? true : undefined}>
       <section className="hero" id="top" aria-labelledby="hero-title">
-        <div className="hero-copy">
-          <p className="eyebrow">The first edit · 2026</p>
-          <h1 id="hero-title">Tradition,<br /><em>in her own rhythm.</em></h1>
-          <p className="hero-intro">
-            Clothing that carries grace lightly — shaped by Indian heritage, made for the woman becoming entirely her own.
-          </p>
-          <a className="text-link" href="#collection">Discover the collection <span aria-hidden="true">↓</span></a>
-        </div>
         <div className="hero-media">
           <img src="/campaign/hero.webp" alt="Woman in an ivory saree with an aubergine border in a quiet courtyard" />
-          <span className="hero-note">Aaradhya / The First Edit</span>
+          <div className="hero-caption">
+            <span>Look 01</span>
+            <span>Ivory / Aubergine</span>
+          </div>
         </div>
+        <div className="hero-copy">
+          <img className="hero-watermark" src="/brand/aaradhya-stamp.svg" alt="" aria-hidden="true" />
+          <p className="eyebrow">The first edit · 2026</p>
+          <h1 id="hero-title">Tradition,<br /><em>in her own rhythm.</em></h1>
+          <div className="hero-foot">
+            <p className="hero-intro">
+              Clothing that carries grace lightly — shaped by Indian heritage, made for the woman becoming entirely her own.
+            </p>
+            <a className="hero-button" href="#collection">Explore the edit <span aria-hidden="true">↘</span></a>
+          </div>
+        </div>
+        <span className="hero-note">Aaradhya / The First Edit / 2026</span>
       </section>
 
       <section className="manifesto" aria-label="Brand statement">
-        <p className="eyebrow">A celebration of womanhood</p>
-        <h2>Admired, never defined.<br />Graceful, never still.</h2>
-        <p>
-          Aaradhya blends the soul of Indian dressing with the quiet confidence of the modern woman — pieces designed to feel personal from the very first wear.
-        </p>
+        <div className="manifesto-inner">
+          <div className="manifesto-meta"><span>01 / Our point of view</span><span>Aaradhya · 2026</span></div>
+          <p className="eyebrow">A celebration of womanhood</p>
+          <h2><span>Admired, never defined.</span><em>Graceful, never still.</em></h2>
+          <div className="manifesto-foot">
+            <p>
+              Aaradhya blends the soul of Indian dressing with the quiet confidence of the modern woman — pieces designed to feel personal from the very first wear.
+            </p>
+            <div className="manifesto-signature" aria-hidden="true"><span>A</span><small>Admiration · Devotion · Grace</small></div>
+          </div>
+        </div>
       </section>
 
       <section className="collection-section" id="collection" aria-labelledby="collection-title">
         <div className="section-heading">
-          <div>
-            <p className="eyebrow">The First Edit</p>
-            <h2 id="collection-title">Objects of <em>admiration</em></h2>
+          <div className="section-title-block">
+            <span className="section-number">02</span>
+            <div>
+              <p className="eyebrow">The First Edit</p>
+              <h2 id="collection-title">Objects of <em>admiration</em></h2>
+            </div>
           </div>
           <p>A considered wardrobe of sarees, fluid sets and occasion silhouettes in Aaradhya’s signature tones.</p>
         </div>
@@ -143,7 +206,7 @@ export default function AaradhyaSite() {
         <div className="product-grid">
           {visibleProducts.map((product, index) => (
             <article className="product-card" key={product.id} style={{ "--delay": `${index * 70}ms` } as React.CSSProperties}>
-              <button className="product-image" type="button" onClick={() => setSelectedProduct(product)} aria-label={`View ${product.name}`}>
+              <button className="product-image" type="button" onClick={() => openProduct(product)} aria-label={`View ${product.name}`}>
                 <img src={product.image} alt={product.imageAlt} loading="eager" />
                 <span>View look <b aria-hidden="true">↗</b></span>
               </button>
@@ -152,8 +215,9 @@ export default function AaradhyaSite() {
                   <p>{product.category} · {product.id}</p>
                   <h3>{product.name}</h3>
                   <span>{product.subtitle}</span>
+                  <small>{product.fabric}</small>
                 </div>
-                <button type="button" onClick={() => setSelectedProduct(product)} aria-label={`Enquire about ${product.name}`}>+</button>
+                <button type="button" onClick={() => openProduct(product)} aria-label={`Enquire about ${product.name}`}>+</button>
               </div>
             </article>
           ))}
@@ -219,16 +283,16 @@ export default function AaradhyaSite() {
 
       {selectedProduct && (
         <div className="product-dialog-backdrop" role="presentation" onMouseDown={(event) => {
-          if (event.target === event.currentTarget) setSelectedProduct(null);
+          if (event.target === event.currentTarget) closeProduct();
         }}>
-          <div className="product-dialog" ref={dialogRef} role="dialog" aria-modal="true" aria-labelledby="dialog-title" tabIndex={-1}>
-            <button className="dialog-close" type="button" onClick={() => setSelectedProduct(null)} aria-label="Close product details">×</button>
+          <div className="product-dialog" ref={dialogRef} role="dialog" aria-modal="true" aria-labelledby="dialog-title" aria-describedby="dialog-description" tabIndex={-1}>
+            <button className="dialog-close" type="button" onClick={closeProduct} aria-label="Close product details">×</button>
             <div className="dialog-image"><img src={selectedProduct.image} alt={selectedProduct.imageAlt} /></div>
             <div className="dialog-copy">
               <p className="eyebrow">{selectedProduct.category} · {selectedProduct.id}</p>
               <h2 id="dialog-title">{selectedProduct.name}</h2>
               <h3>{selectedProduct.subtitle}</h3>
-              <p>{selectedProduct.description}</p>
+              <p id="dialog-description">{selectedProduct.description}</p>
               <dl>
                 <div><dt>Fabric</dt><dd>{selectedProduct.fabric}</dd></div>
                 <div><dt>Colour</dt><dd>{selectedProduct.colors}</dd></div>
