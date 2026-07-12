@@ -1020,7 +1020,7 @@ footer div {
   transform: translateY(-3px);
 }
 
-.floating-whatsapp span {
+.floating-whatsapp > span {
   width: 38px;
   height: 38px;
   display: grid;
@@ -1039,6 +1039,10 @@ footer div {
 }
 
 .floating-whatsapp i {
+  position: relative;
+  width: 16px;
+  height: 16px;
+  display: block;
   font-size: 15px;
   font-style: normal;
   line-height: 1;
@@ -1046,6 +1050,41 @@ footer div {
 }
 
 .floating-whatsapp:hover i { transform: translate(2px, -2px); }
+
+.cta-arrow-glyph,
+.cta-arrow-glyph::before,
+.cta-arrow-glyph::after {
+  position: absolute;
+  display: block;
+}
+
+.cta-arrow-glyph {
+  inset: 0;
+}
+
+.cta-arrow-glyph::before,
+.cta-arrow-glyph::after {
+  content: "";
+}
+
+.cta-arrow-glyph::before {
+  left: 2px;
+  bottom: 3px;
+  width: 13px;
+  height: 1.5px;
+  background: currentColor;
+  transform: rotate(-45deg);
+  transform-origin: center;
+}
+
+.cta-arrow-glyph::after {
+  top: 1px;
+  right: 1px;
+  width: 7px;
+  height: 7px;
+  border-top: 1.5px solid currentColor;
+  border-right: 1.5px solid currentColor;
+}
 
 @keyframes ctaFloat {
   0%, 100% { transform: translateY(0); }
@@ -1221,10 +1260,10 @@ footer div {
   }
 
   .hero-copy {
-    order: 1;
+    order: 2;
     width: 100%;
-    min-height: 58svh;
-    padding: 62px 22px 54px;
+    min-height: 0;
+    padding: 52px 22px 60px;
     background: var(--purple-deep);
     color: white;
   }
@@ -1239,16 +1278,25 @@ footer div {
   }
 
   h1 {
-    font-size: clamp(60px, 17vw, 80px);
+    margin-bottom: 34px;
+    font-size: clamp(56px, 16vw, 74px);
     line-height: 0.86;
   }
 
   .hero-intro { max-width: 94%; margin-bottom: 28px; color: rgba(255, 255, 255, 0.76); font-size: 15px; }
   .hero-button { min-width: 220px; border-color: white; background: white; color: var(--purple-deep); }
   .hero-button:hover { color: white; border-color: white; }
-  .hero-media { position: relative; order: 2; min-height: 64svh; }
-  .hero-media::after { background: linear-gradient(180deg, transparent 65%, rgba(29, 13, 35, 0.42)); }
-  .hero-media img { object-position: 67% center; }
+  .hero-media {
+    position: relative;
+    order: 1;
+    flex: 0 0 auto;
+    width: 100%;
+    height: clamp(360px, 52svh, 520px);
+    min-height: 0;
+    background: #d8c9bd;
+  }
+  .hero-media::after { background: linear-gradient(180deg, transparent 62%, rgba(29, 13, 35, 0.34)); }
+  .hero-media img { position: absolute; inset: 0; object-fit: cover; object-position: 69% center; }
   .hero-caption { display: flex; left: 18px; right: auto; bottom: 18px; }
   .hero-note { display: none; }
 

@@ -287,7 +287,7 @@ export default function AaradhyaSite() {
       </footer>
 
       <a className="floating-whatsapp" href={whatsappHref()} target="_blank" rel="noreferrer" aria-label="Chat with Aaradhya on WhatsApp">
-        <span>WA</span><b>Enquire</b><i aria-hidden="true">↗</i>
+        <span>WA</span><b>Enquire</b><i aria-hidden="true"><span className="cta-arrow-glyph" /></i>
       </a>
       </div>
       </div>
