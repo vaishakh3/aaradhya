@@ -151,16 +151,16 @@ export default function AaradhyaSite() {
         </div>
         <div className="hero-copy">
           <img className="hero-watermark" src="/brand/aaradhya-stamp.svg" alt="" aria-hidden="true" />
-          <p className="eyebrow">The first edit · 2026</p>
+          <p className="eyebrow">Rhythm of Grace · 2026</p>
           <h1 id="hero-title">Tradition,<br /><em>in her own rhythm.</em></h1>
           <div className="hero-foot">
             <p className="hero-intro">
               Clothing that carries grace lightly — shaped by Indian heritage, made for the woman becoming entirely her own.
             </p>
-            <a className="hero-button" href="#collection">Explore the edit <span aria-hidden="true">↘</span></a>
+            <a className="hero-button" href="#collection">Discover the collection <span aria-hidden="true">↓</span></a>
           </div>
         </div>
-        <span className="hero-note">Aaradhya / The First Edit / 2026</span>
+        <span className="hero-note">Aaradhya / Rhythm of Grace / 2026</span>
       </section>
 
       <section className="manifesto" aria-label="Brand statement">
@@ -182,7 +182,7 @@ export default function AaradhyaSite() {
           <div className="section-title-block">
             <span className="section-number">02</span>
             <div>
-              <p className="eyebrow">The First Edit</p>
+              <p className="eyebrow">Rhythm of Grace</p>
               <h2 id="collection-title">Objects of <em>admiration</em></h2>
             </div>
           </div>

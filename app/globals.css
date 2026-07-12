@@ -265,10 +265,10 @@ footer a:hover::after {
 
 .hero-watermark {
   position: absolute;
-  top: 9%;
-  left: 62%;
-  width: clamp(170px, 14vw, 270px);
-  opacity: 0.055;
+  top: 8%;
+  left: 42%;
+  width: clamp(160px, 12vw, 230px);
+  opacity: 0.045;
   pointer-events: none;
 }
 
@@ -323,11 +323,11 @@ h2 em {
 }
 
 .hero-foot {
-  width: min(100%, 800px);
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) auto;
-  gap: 42px;
-  align-items: end;
+  width: min(100%, 520px);
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 26px;
 }
 
 .hero-button {
@@ -1234,8 +1234,8 @@ footer div {
   .hero-watermark { left: auto; right: -30px; top: 8%; width: 230px; opacity: 0.08; filter: brightness(0) invert(1); }
 
   .hero-foot {
-    display: block;
     width: 100%;
+    gap: 0;
   }
 
   h1 {
