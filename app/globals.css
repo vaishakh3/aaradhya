@@ -1068,9 +1068,9 @@ footer div {
 }
 
 .cta-arrow-glyph::before {
-  left: 2px;
-  bottom: 3px;
-  width: 13px;
+  top: 7px;
+  left: 0;
+  width: 16px;
   height: 1.5px;
   background: currentColor;
   transform: rotate(-45deg);
@@ -1078,8 +1078,8 @@ footer div {
 }
 
 .cta-arrow-glyph::after {
-  top: 1px;
-  right: 1px;
+  top: 0;
+  right: 0;
   width: 7px;
   height: 7px;
   border-top: 1.5px solid currentColor;
