@@ -172,7 +172,7 @@ export default function AaradhyaSite() {
             <p>
               Aaradhya blends the soul of Indian dressing with the quiet confidence of the modern woman — pieces designed to feel personal from the very first wear.
             </p>
-            <div className="manifesto-signature" aria-hidden="true"><span>A</span><small>Admiration · Devotion · Grace</small></div>
+            <div className="manifesto-signature" aria-hidden="true"><strong>Aaradhya</strong><small>Admiration · Devotion · Grace</small></div>
           </div>
         </div>
       </section>
@@ -217,7 +217,9 @@ export default function AaradhyaSite() {
                   <span>{product.subtitle}</span>
                   <small>{product.fabric}</small>
                 </div>
-                <button type="button" onClick={() => openProduct(product)} aria-label={`Enquire about ${product.name}`}>+</button>
+                <button type="button" onClick={() => openProduct(product)} aria-label={`Enquire about ${product.name}`}>
+                  <span className="plus-glyph" aria-hidden="true" />
+                </button>
               </div>
             </article>
           ))}
@@ -229,7 +231,6 @@ export default function AaradhyaSite() {
       <section className="story-section" id="story" aria-labelledby="story-title">
         <div className="story-mark">
           <img src="/brand/aaradhya-stamp.svg" alt="Aaradhya brand stamp" />
-          <span>Est. 2026</span>
         </div>
         <div className="story-copy">
           <p className="eyebrow">The name / The meaning</p>
@@ -276,7 +277,7 @@ export default function AaradhyaSite() {
       </footer>
 
       <a className="floating-whatsapp" href={whatsappHref()} target="_blank" rel="noreferrer" aria-label="Chat with Aaradhya on WhatsApp">
-        <span>WA</span><b>Enquire</b>
+        <span>WA</span><b>Enquire</b><i aria-hidden="true">↗</i>
       </a>
       </div>
       </div>
@@ -286,7 +287,9 @@ export default function AaradhyaSite() {
           if (event.target === event.currentTarget) closeProduct();
         }}>
           <div className="product-dialog" ref={dialogRef} role="dialog" aria-modal="true" aria-labelledby="dialog-title" aria-describedby="dialog-description" tabIndex={-1}>
-            <button className="dialog-close" type="button" onClick={closeProduct} aria-label="Close product details">×</button>
+            <button className="dialog-close" type="button" onClick={closeProduct} aria-label="Close product details">
+              <span className="close-glyph" aria-hidden="true" />
+            </button>
             <div className="dialog-image"><img src={selectedProduct.image} alt={selectedProduct.imageAlt} /></div>
             <div className="dialog-copy">
               <p className="eyebrow">{selectedProduct.category} · {selectedProduct.id}</p>

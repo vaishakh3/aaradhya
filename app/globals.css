@@ -484,11 +484,12 @@ h2 em {
   gap: 20px;
 }
 
-.manifesto-signature > span {
+.manifesto-signature > strong {
   font-family: var(--font-display), serif;
-  font-size: 88px;
+  font-size: clamp(38px, 3.4vw, 58px);
   font-style: italic;
-  line-height: 0.72;
+  font-weight: 400;
+  line-height: 0.85;
   color: var(--lilac);
 }
 
@@ -693,15 +694,34 @@ h2 em {
   flex: 0 0 auto;
   width: 44px;
   height: 44px;
-  padding: 0 0 2px;
+  display: grid;
+  place-items: center;
+  padding: 0;
   border: 1px solid var(--line);
   border-radius: 50%;
   background: transparent;
-  font-family: var(--font-display), serif;
-  font-size: 29px;
   cursor: pointer;
   transition: background 200ms ease, color 200ms ease, transform 200ms ease;
 }
+
+.plus-glyph {
+  position: relative;
+  width: 16px;
+  height: 16px;
+}
+
+.plus-glyph::before,
+.plus-glyph::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  background: currentColor;
+  transform: translate(-50%, -50%);
+}
+
+.plus-glyph::before { width: 16px; height: 1.5px; }
+.plus-glyph::after { width: 1.5px; height: 16px; }
 
 .product-meta button:hover {
   background: var(--purple);
@@ -767,16 +787,6 @@ h2 em {
   z-index: 1;
   width: min(78%, 450px);
   filter: brightness(0) invert(1);
-}
-
-.story-mark span {
-  position: absolute;
-  right: 7%;
-  bottom: 9%;
-  z-index: 1;
-  font-size: 10px;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
 }
 
 .story-copy .eyebrow {
@@ -955,12 +965,33 @@ footer div {
   z-index: 20;
   display: flex;
   align-items: center;
-  gap: 11px;
-  padding: 8px 17px 8px 8px;
+  gap: 12px;
+  padding: 8px 16px 8px 8px;
+  border: 1px solid rgba(215, 168, 232, 0.5);
   border-radius: 999px;
-  background: #1d1b1e;
-  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+  background: linear-gradient(135deg, #7500a8 0%, var(--purple-deep) 100%);
+  box-shadow: 0 12px 34px rgba(49, 7, 63, 0.28);
   color: white;
+  isolation: isolate;
+  overflow: hidden;
+  animation: ctaFloat 4.8s ease-in-out infinite;
+  transition: box-shadow 300ms ease, transform 300ms ease;
+}
+
+.floating-whatsapp::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: linear-gradient(110deg, transparent 20%, rgba(255, 255, 255, 0.18) 48%, transparent 72%);
+  transform: translateX(-120%);
+  animation: ctaSheen 5.5s ease-in-out infinite;
+}
+
+.floating-whatsapp:hover {
+  animation-play-state: paused;
+  box-shadow: 0 16px 42px rgba(104, 0, 151, 0.38);
+  transform: translateY(-3px);
 }
 
 .floating-whatsapp span {
@@ -968,7 +999,7 @@ footer div {
   height: 38px;
   display: grid;
   place-items: center;
-  border: 1px solid rgba(255, 255, 255, 0.5);
+  border: 1px solid rgba(255, 255, 255, 0.68);
   border-radius: 50%;
   font-size: 9px;
   letter-spacing: 0.06em;
@@ -979,6 +1010,25 @@ footer div {
   font-weight: 600;
   letter-spacing: 0.16em;
   text-transform: uppercase;
+}
+
+.floating-whatsapp i {
+  font-size: 15px;
+  font-style: normal;
+  line-height: 1;
+  transition: transform 250ms ease;
+}
+
+.floating-whatsapp:hover i { transform: translate(2px, -2px); }
+
+@keyframes ctaFloat {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-3px); }
+}
+
+@keyframes ctaSheen {
+  0%, 62% { transform: translateX(-120%); }
+  82%, 100% { transform: translateX(120%); }
 }
 
 .product-dialog-backdrop {
@@ -1013,14 +1063,34 @@ footer div {
   z-index: 2;
   width: 42px;
   height: 42px;
-  padding: 0 0 4px;
+  display: grid;
+  place-items: center;
+  padding: 0;
   border: 1px solid var(--line);
   border-radius: 50%;
   background: var(--ivory);
-  font-family: var(--font-display), serif;
-  font-size: 30px;
   cursor: pointer;
 }
+
+.close-glyph {
+  position: relative;
+  width: 16px;
+  height: 16px;
+}
+
+.close-glyph::before,
+.close-glyph::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 18px;
+  height: 1.5px;
+  background: currentColor;
+}
+
+.close-glyph::before { transform: translate(-50%, -50%) rotate(45deg); }
+.close-glyph::after { transform: translate(-50%, -50%) rotate(-45deg); }
 
 .dialog-image {
   min-height: 700px;
@@ -1167,7 +1237,7 @@ footer div {
   .manifesto-foot { display: block; margin-top: 56px; padding-top: 28px; }
   .manifesto-foot > p { font-size: 15px; }
   .manifesto-signature { margin-top: 42px; }
-  .manifesto-signature > span { font-size: 70px; }
+  .manifesto-signature > strong { font-size: 42px; }
 
   .collection-section { padding: 96px 14px 112px; }
   .section-heading { display: block; margin: 0 8px 54px; }
