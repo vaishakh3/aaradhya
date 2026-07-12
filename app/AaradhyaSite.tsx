@@ -226,7 +226,17 @@ export default function AaradhyaSite() {
         </div>
       </section>
 
-      <div className="pattern-ribbon" aria-hidden="true"><span>Aaradhya · Grace in every line · Aaradhya · Grace in every line ·</span></div>
+      <div className="pattern-ribbon" aria-hidden="true">
+        <div className="pattern-track">
+          {[0, 1].map((group) => (
+            <div className="pattern-group" key={group}>
+              {Array.from({ length: 6 }, (_, item) => (
+                <span key={item}>Aaradhya · Grace in every line ·</span>
+              ))}
+            </div>
+          ))}
+        </div>
+      </div>
 
       <section className="story-section" id="story" aria-labelledby="story-title">
         <div className="story-mark">

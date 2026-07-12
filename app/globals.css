@@ -739,19 +739,45 @@ h2 em {
   overflow: hidden;
 }
 
-.pattern-ribbon span {
-  display: block;
+.pattern-ribbon::before,
+.pattern-ribbon::after {
+  content: "";
+  position: absolute;
+  inset-block: 0;
+  z-index: 1;
+  width: clamp(28px, 4vw, 72px);
+  pointer-events: none;
+}
+
+.pattern-ribbon::before { left: 0; background: linear-gradient(90deg, var(--purple), transparent); }
+.pattern-ribbon::after { right: 0; background: linear-gradient(270deg, var(--purple), transparent); }
+
+.pattern-track {
+  display: flex;
   width: max-content;
+  will-change: transform;
+  animation: marquee 34s linear infinite;
+}
+
+.pattern-group {
+  display: flex;
+  flex-shrink: 0;
+}
+
+.pattern-group span {
+  flex: 0 0 auto;
+  padding-right: clamp(42px, 4vw, 82px);
   font-family: var(--font-display), serif;
   font-size: 30px;
   font-style: italic;
   letter-spacing: 0.02em;
   white-space: nowrap;
-  animation: marquee 20s linear infinite;
 }
 
+.pattern-ribbon:hover .pattern-track { animation-play-state: paused; }
+
 @keyframes marquee {
-  to { transform: translateX(-35%); }
+  to { transform: translateX(-50%); }
 }
 
 .story-section {
@@ -1323,6 +1349,7 @@ footer div {
 
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
+  .pattern-track { animation: none !important; transform: none !important; }
   *, *::before, *::after {
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
