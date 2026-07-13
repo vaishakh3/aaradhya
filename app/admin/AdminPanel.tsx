@@ -59,10 +59,10 @@ export default function AdminPanel() {
       setConfigured(data.configured);
       setNotice(
         data.configured
-          ? { title: "Connected to Google Sheets", message: "Saved changes publish to the collection automatically.", tone: "success" }
+          ? { title: "Collection ready", message: `${data.products.length} pieces are ready to manage.` }
           : {
-              title: "Google Sheets is not connected yet",
-              message: "You can review the default products, but saving requires the Google and Cloudinary environment settings.",
+              title: "Publishing is temporarily unavailable",
+              message: "You can review the collection, but changes cannot be saved right now.",
               tone: "warning",
             },
       );
@@ -309,9 +309,11 @@ export default function AdminPanel() {
         <div><a href="/" target="_blank" rel="noreferrer">View website ↗</a><button onClick={logout}>Sign out</button></div>
       </header>
 
-      <section className={`${styles.notice} ${notice.tone ? styles[notice.tone] : ""}`} aria-live="polite">
-        <strong>{notice.title}</strong><span>{notice.message}</span>
-      </section>
+      {notice.tone && (
+        <section className={`${styles.notice} ${styles[notice.tone]}`} aria-live="polite">
+          <strong>{notice.title}</strong><span>{notice.message}</span>
+        </section>
+      )}
 
       <section className={styles.workspace}>
         <div className={styles.collectionPanel}>
@@ -335,19 +337,36 @@ export default function AdminPanel() {
           <div className={styles.panelHeading}><div><p>{editingId ? "Editing product" : "New product"}</p><h2>{editingId ? draft.name : "Add a piece"}</h2></div>{editingId && <button onClick={startNew}>Cancel</button>}</div>
           <form className={styles.productForm} onSubmit={saveProduct}>
             <div className={styles.imageField}>
-              {draft.image ? <img src={draft.image} alt="Product preview" /> : <div><span>Image preview</span></div>}
-              <label>{uploading ? "Uploading…" : "Upload image"}<input type="file" accept="image/png,image/jpeg,image/webp" disabled={uploading} onChange={(event) => uploadImage(event.target.files?.[0])} /></label>
+              {draft.image ? <img src={draft.image} alt="Product preview" /> : <div><span>Product photograph</span><small>Portrait images work best</small></div>}
+              <label>{uploading ? "Uploading…" : draft.image ? "Replace image" : "Upload image"}<input type="file" accept="image/png,image/jpeg,image/webp" disabled={uploading} onChange={(event) => uploadImage(event.target.files?.[0])} /></label>
             </div>
-            <label>Image URL<input value={draft.image} onChange={(event) => updateDraft("image", event.target.value)} placeholder="Cloudinary or image URL" /></label>
-            <div className={styles.fieldGrid}><label>Product name<input value={draft.name} onChange={(event) => updateDraft("name", event.target.value)} required /></label><label>Category<input list="product-categories" value={draft.category} onChange={(event) => updateDraft("category", event.target.value)} required /><datalist id="product-categories">{categories.map((category) => <option value={category} key={category} />)}</datalist></label></div>
-            <label>Short description<input value={draft.subtitle} onChange={(event) => updateDraft("subtitle", event.target.value)} placeholder="Example: Aubergine handloom saree" /></label>
-            <div className={styles.fieldGrid}><label>Fabric<input value={draft.fabric} onChange={(event) => updateDraft("fabric", event.target.value)} /></label><label>Colours<input value={draft.colors} onChange={(event) => updateDraft("colors", event.target.value)} /></label></div>
-            <label>Product story<textarea rows={4} value={draft.description} onChange={(event) => updateDraft("description", event.target.value)} /></label>
-            <label>Image description<input value={draft.imageAlt} onChange={(event) => updateDraft("imageAlt", event.target.value)} placeholder="Describe the garment for accessibility" /></label>
-            <label>Instagram link<input type="url" value={draft.instagramUrl || ""} onChange={(event) => updateDraft("instagramUrl", event.target.value)} placeholder="https://instagram.com/…" /></label>
-            <label className={styles.checkField}><input type="checkbox" checked={draft.active !== false} onChange={(event) => updateDraft("active", event.target.checked)} /><span>Show this product on the website</span></label>
+
+            <fieldset className={styles.formSection}>
+              <legend><span>01</span> The piece</legend>
+              <div className={styles.fieldGrid}>
+                <label>Product name<input value={draft.name} onChange={(event) => updateDraft("name", event.target.value)} placeholder="Example: Vasudha" required /></label>
+                <label>Category<input list="product-categories" value={draft.category} onChange={(event) => updateDraft("category", event.target.value)} placeholder="Example: Sarees" required /><datalist id="product-categories">{categories.map((category) => <option value={category} key={category} />)}</datalist></label>
+              </div>
+              <label>Collection card line<input value={draft.subtitle} onChange={(event) => updateDraft("subtitle", event.target.value)} placeholder="Example: Aubergine handloom saree" maxLength={80} required /><small className={styles.fieldHelp}>A concise description visitors see beneath the product name.</small></label>
+            </fieldset>
+
+            <fieldset className={styles.formSection}>
+              <legend><span>02</span> Material & story</legend>
+              <div className={styles.fieldGrid}>
+                <label>Fabric or material<input value={draft.fabric} onChange={(event) => updateDraft("fabric", event.target.value)} placeholder="Example: Silk-cotton handloom" required /></label>
+                <label>Colourway<input value={draft.colors} onChange={(event) => updateDraft("colors", event.target.value)} placeholder="Example: Aubergine / Antique gold" required /></label>
+              </div>
+              <label>Product story<textarea rows={5} value={draft.description} onChange={(event) => updateDraft("description", event.target.value)} placeholder="Describe the character, craft and feeling of the piece." maxLength={420} required /><small className={styles.fieldHelp}>This appears inside the full product view.</small></label>
+            </fieldset>
+
+            <fieldset className={styles.formSection}>
+              <legend><span>03</span> Publishing</legend>
+              <label><span className={styles.fieldLabel}>Instagram reel or post <em>Optional</em></span><input type="url" value={draft.instagramUrl || ""} onChange={(event) => updateDraft("instagramUrl", event.target.value)} placeholder="https://instagram.com/…" /><small className={styles.fieldHelp}>Adds a “Watch the story” link to the product view.</small></label>
+              <label className={styles.checkField}><input type="checkbox" checked={draft.active !== false} onChange={(event) => updateDraft("active", event.target.checked)} /><span><strong>Visible on the website</strong><small>Turn this off to save the piece without publishing it.</small></span></label>
+            </fieldset>
+
             <button className={styles.saveButton} disabled={saving || uploading || !configured}>{saving ? "Saving…" : editingId ? "Save changes" : "Add product"}</button>
-            {!configured && <small className={styles.formHint}>Connect Google Sheets in the deployment settings to enable saving.</small>}
+            {!configured && <small className={styles.formHint}>Publishing is temporarily unavailable. Please try again later.</small>}
           </form>
         </aside>
       </section>

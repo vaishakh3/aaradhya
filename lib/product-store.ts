@@ -84,7 +84,9 @@ const normalizeProduct = (input: ProductInput, existing?: Product): Product => {
     description: String(merged.description || "").trim(),
     colors: String(merged.colors || "").trim(),
     image: String(merged.image || "").trim(),
-    imageAlt: String(merged.imageAlt || `${merged.name || "Aaradhya"} look`).trim(),
+    imageAlt: String(
+      merged.imageAlt || `Aaradhya ${merged.name || "collection piece"}${merged.subtitle ? ` — ${merged.subtitle}` : ""}`,
+    ).trim(),
     instagramUrl: String(merged.instagramUrl || "").trim() || undefined,
     active: merged.active !== false,
     sort: Number(merged.sort || 0),
@@ -95,6 +97,10 @@ const validateProduct = (product: Product) => {
   if (!product.name) throw new Error("Product name is required.");
   if (!product.category) throw new Error("Category is required.");
   if (!product.image) throw new Error("A product image is required.");
+  if (!product.subtitle) throw new Error("Collection card line is required.");
+  if (!product.fabric) throw new Error("Fabric or material is required.");
+  if (!product.colors) throw new Error("Colourway is required.");
+  if (!product.description) throw new Error("Product story is required.");
   return product;
 };
 
