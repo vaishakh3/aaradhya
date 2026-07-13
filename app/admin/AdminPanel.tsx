@@ -42,6 +42,7 @@ export default function AdminPanel() {
   const [notice, setNotice] = useState<Notice>({ title: "Loading products", message: "Please wait a moment." });
   const [saving, setSaving] = useState(false);
   const [uploading, setUploading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
 
   const categories = useMemo(
     () => Array.from(new Set(["Sarees", "Sets", "Occasion", ...products.map((product) => product.category)])).filter(Boolean),
@@ -213,19 +214,90 @@ export default function AdminPanel() {
   if (!signedIn) {
     return (
       <main className={styles.loginPage}>
-        <section className={styles.loginIntro}>
-          <img src="/brand/aaradhya-logo.svg" alt="Aaradhya" />
-          <p>Private collection studio</p>
-          <h1>Curate every piece<br /><em>with intention.</em></h1>
+        <section className={styles.loginVisual}>
+          <header className={styles.loginTopbar}>
+            <Link href="/" className={styles.loginLogo} aria-label="Return to the Aaradhya website">
+              <img src="/brand/aaradhya-logo.svg" alt="Aaradhya" />
+            </Link>
+            <Link href="/" className={styles.backLink}>
+              <span>View the collection</span>
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M5 12h13M13 6l6 6-6 6" />
+              </svg>
+            </Link>
+          </header>
+
+          <div className={styles.loginStory}>
+            <p><span />Aaradhya private studio</p>
+            <h1>The collection,<br /><em>considered.</em></h1>
+            <div className={styles.loginStoryNote}>
+              <span>01</span>
+              <p>A quiet workspace to shape every piece, detail and story before it meets the world.</p>
+            </div>
+          </div>
+
+          <div className={styles.loginVisualFooter}>
+            <span>Where elegance becomes an identity</span>
+            <span>India · Est. 2026</span>
+          </div>
         </section>
-        <form className={styles.loginCard} onSubmit={login}>
-          <p>Authorised access</p>
-          <h2>Sign in</h2>
-          <label>Username<input name="username" autoComplete="username" required /></label>
-          <label>Password<input name="password" type="password" autoComplete="current-password" required /></label>
-          <button disabled={saving}>{saving ? "Signing in…" : "Enter the studio"}</button>
-          {notice.tone === "error" && <small role="alert">{notice.message}</small>}
-        </form>
+
+        <section className={styles.loginAccess}>
+          <div className={styles.loginStamp} aria-hidden="true" />
+          <form className={styles.loginCard} onSubmit={login}>
+            <div className={styles.loginCardHeading}>
+              <div className={styles.loginCardIndex}><span>Private access</span><span>02 / Studio</span></div>
+              <h2>Welcome<br /><em>back.</em></h2>
+              <p>Sign in to curate the Aaradhya collection.</p>
+            </div>
+
+            <div className={styles.loginField}>
+              <label htmlFor="admin-username">Username</label>
+              <input
+                id="admin-username"
+                name="username"
+                autoComplete="username"
+                autoCapitalize="none"
+                autoCorrect="off"
+                spellCheck={false}
+                placeholder="Studio username"
+                required
+              />
+            </div>
+            <div className={styles.loginField}>
+              <label htmlFor="admin-password">Password</label>
+              <span className={styles.passwordField}>
+                <input
+                  id="admin-password"
+                  name="password"
+                  type={showPassword ? "text" : "password"}
+                  autoComplete="current-password"
+                  placeholder="Your password"
+                  required
+                />
+                <button
+                  type="button"
+                  className={styles.passwordToggle}
+                  onClick={() => setShowPassword((visible) => !visible)}
+                  aria-label={showPassword ? "Hide password" : "Show password"}
+                >
+                  {showPassword ? "Hide" : "Show"}
+                </button>
+              </span>
+            </div>
+
+            <button className={styles.loginSubmit} disabled={saving}>
+              <span>{saving ? "Opening studio…" : "Enter the studio"}</span>
+              <span className={styles.loginSubmitIcon} aria-hidden="true">
+                <svg viewBox="0 0 24 24"><path d="M5 12h13M13 6l6 6-6 6" /></svg>
+              </span>
+            </button>
+
+            {notice.tone === "error" && <small className={styles.loginError} role="alert">{notice.message}</small>}
+            <p className={styles.loginSecurity}><span />Protected collection management</p>
+          </form>
+          <p className={styles.loginAccessFooter}>Aaradhya · Collection studio</p>
+        </section>
       </main>
     );
   }
