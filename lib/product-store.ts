@@ -85,7 +85,7 @@ const normalizeProduct = (input: ProductInput, existing?: Product): Product => {
     colors: String(merged.colors || "").trim(),
     image: String(merged.image || "").trim(),
     imageAlt: String(
-      merged.imageAlt || `Aaradhya ${merged.name || "collection piece"}${merged.subtitle ? ` — ${merged.subtitle}` : ""}`,
+      merged.imageAlt || `Aaradhya ${merged.name || "collection design"}${merged.subtitle ? ` — ${merged.subtitle}` : ""}`,
     ).trim(),
     instagramUrl: String(merged.instagramUrl || "").trim() || undefined,
     active: merged.active !== false,

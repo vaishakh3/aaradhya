@@ -170,7 +170,7 @@ export default function AaradhyaSite() {
           <h2><span>Admired, never defined.</span><em>Graceful, never still.</em></h2>
           <div className="manifesto-foot">
             <p>
-              Aaradhya blends the soul of Indian dressing with the quiet confidence of the modern woman — pieces designed to feel personal from the very first wear.
+              Aaradhya blends the soul of Indian dressing with the quiet confidence of the modern woman — designs created to feel personal from the very first wear.
             </p>
             <div className="manifesto-signature" aria-hidden="true"><strong>Aaradhya</strong><small>Admiration · Devotion · Grace</small></div>
           </div>
@@ -272,7 +272,7 @@ export default function AaradhyaSite() {
         <div className="contact-inner">
           <p className="eyebrow">Private enquiries</p>
           <h2 id="contact-title">Found something<br /><em>that feels like you?</em></h2>
-          <p>Begin a conversation on WhatsApp. We’ll help with availability, sizing, fabric details and your perfect Aaradhya piece.</p>
+          <p>Begin a conversation on WhatsApp. We’ll help with availability, sizing, fabric details and the Aaradhya design that feels right for you.</p>
           <a className="primary-button" href={whatsappHref()} target="_blank" rel="noreferrer">
             Enquire on WhatsApp <span aria-hidden="true">↗</span>
           </a>

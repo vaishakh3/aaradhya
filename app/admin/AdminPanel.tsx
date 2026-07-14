@@ -59,7 +59,7 @@ export default function AdminPanel() {
       setConfigured(data.configured);
       setNotice(
         data.configured
-          ? { title: "Collection ready", message: `${data.products.length} pieces are ready to manage.` }
+          ? { title: "Collection ready", message: `${data.products.length} designs are ready to manage.` }
           : {
               title: "Publishing is temporarily unavailable",
               message: "You can review the collection, but changes cannot be saved right now.",
@@ -232,7 +232,7 @@ export default function AdminPanel() {
             <h1>The collection,<br /><em>considered.</em></h1>
             <div className={styles.loginStoryNote}>
               <span>01</span>
-              <p>A quiet workspace to shape every piece, detail and story before it meets the world.</p>
+              <p>A quiet workspace to shape every design, detail and story before it meets the world.</p>
             </div>
           </div>
 
@@ -334,7 +334,7 @@ export default function AdminPanel() {
         </div>
 
         <aside className={styles.editorPanel}>
-          <div className={styles.panelHeading}><div><p>{editingId ? "Editing product" : "New product"}</p><h2>{editingId ? draft.name : "Add a piece"}</h2></div>{editingId && <button onClick={startNew}>Cancel</button>}</div>
+          <div className={styles.panelHeading}><div><p>{editingId ? "Editing product" : "New product"}</p><h2>{editingId ? draft.name : "Add a design"}</h2></div>{editingId && <button onClick={startNew}>Cancel</button>}</div>
           <form className={styles.productForm} onSubmit={saveProduct}>
             <div className={styles.imageField}>
               {draft.image ? <img src={draft.image} alt="Product preview" /> : <div><span>Product photograph</span><small>Portrait images work best</small></div>}
@@ -342,7 +342,7 @@ export default function AdminPanel() {
             </div>
 
             <fieldset className={styles.formSection}>
-              <legend><span>01</span> The piece</legend>
+              <legend><span>01</span> The design</legend>
               <div className={styles.fieldGrid}>
                 <label>Product name<input value={draft.name} onChange={(event) => updateDraft("name", event.target.value)} placeholder="Example: Vasudha" required /></label>
                 <label>Category<input list="product-categories" value={draft.category} onChange={(event) => updateDraft("category", event.target.value)} placeholder="Example: Sarees" required /><datalist id="product-categories">{categories.map((category) => <option value={category} key={category} />)}</datalist></label>
@@ -356,13 +356,13 @@ export default function AdminPanel() {
                 <label>Fabric or material<input value={draft.fabric} onChange={(event) => updateDraft("fabric", event.target.value)} placeholder="Example: Silk-cotton handloom" required /></label>
                 <label>Colourway<input value={draft.colors} onChange={(event) => updateDraft("colors", event.target.value)} placeholder="Example: Aubergine / Antique gold" required /></label>
               </div>
-              <label>Product story<textarea rows={5} value={draft.description} onChange={(event) => updateDraft("description", event.target.value)} placeholder="Describe the character, craft and feeling of the piece." maxLength={420} required /><small className={styles.fieldHelp}>This appears inside the full product view.</small></label>
+              <label>Product story<textarea rows={5} value={draft.description} onChange={(event) => updateDraft("description", event.target.value)} placeholder="Describe the character, craft and feeling of the design." maxLength={420} required /><small className={styles.fieldHelp}>This appears inside the full product view.</small></label>
             </fieldset>
 
             <fieldset className={styles.formSection}>
               <legend><span>03</span> Publishing</legend>
               <label><span className={styles.fieldLabel}>Instagram reel or post <em>Optional</em></span><input type="url" value={draft.instagramUrl || ""} onChange={(event) => updateDraft("instagramUrl", event.target.value)} placeholder="https://instagram.com/…" /><small className={styles.fieldHelp}>Adds a “Watch the story” link to the product view.</small></label>
-              <label className={styles.checkField}><input type="checkbox" checked={draft.active !== false} onChange={(event) => updateDraft("active", event.target.checked)} /><span><strong>Visible on the website</strong><small>Turn this off to save the piece without publishing it.</small></span></label>
+              <label className={styles.checkField}><input type="checkbox" checked={draft.active !== false} onChange={(event) => updateDraft("active", event.target.checked)} /><span><strong>Visible on the website</strong><small>Turn this off to save the design without publishing it.</small></span></label>
             </fieldset>
 
             <button className={styles.saveButton} disabled={saving || uploading || !configured}>{saving ? "Saving…" : editingId ? "Save changes" : "Add product"}</button>
